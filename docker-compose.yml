@@ -21,6 +21,7 @@ services:
     volumes:
       - .:/var/www
       - ./deploy/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./deploy/php/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
 #    depends_on:
 #     - db
 
@@ -30,10 +31,12 @@ services:
     container_name: nginx
     ports:
       - 80:80
+      - 443:443
     volumes:
       - .:/var/www
       - ./deploy/nginx/.nginx.conf:/etc/nginx/.nginx.conf
       - ./deploy/nginx/flarum.conf:/etc/nginx/template/flarum.template
+      - ./deploy/nginx/certificate:/etc/nginx/certs
     command: bash -c "envsubst '$$VIRTUAL_HOST' < /etc/nginx/template/flarum.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
     depends_on:
       - app
